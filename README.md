@@ -49,3 +49,61 @@ drwxr-xr-x 1 user 197121 0 Nov 5 16:59 ..
 -rw-r--r-- 1 user 197121 15 Nov 5 17:00 renamed_file.txt
 
 $ rm renamed_file.txt
+# 변경 전
+$touch file.txt && mkdir mydir$ ls -l
+-rw-r--r-- 1 root root    0 Nov 5 17:10 file.txt
+drwxr-xr-x 2 root root 4096 Nov 5 17:10 mydir
+
+# 권한 변경 실행
+$ chmod 600 file.txt
+$ chmod 700 mydir
+
+# 변경 후 확인
+$ ls -l
+-rw------- 1 root root    0 Nov 5 17:10 file.txt
+drwx------ 2 root root 4096 Nov 5 17:10 mydir
+$ docker --version
+Docker version 27.x.x
+
+$ docker info
+Client:
+ Context:    default
+ Debug Mode: false
+Server:
+ Containers: 2
+  Running: 0
+  Paused: 0
+  Stopped: 2
+ Images: 2
+ Server Version: 27.x.x
+ # 이미지 빌드
+$ docker build -t my-web .
+
+# 포트 매핑 실행 (1차: 8080 포트)
+$ docker run -d -p 8080:80 --name my-web my-web
+
+# 포트 매핑 실행 (2차: 8081 포트 - 포트 분기 검증)
+$ docker run -d -p 8081:80 --name my-web2 my-web
+
+# 컨테이너 상태 확인
+$ docker ps
+CONTAINER ID   IMAGE     PORTS                  NAMES
+xxxxxxxxxxxx   my-web    0.0.0.0:8080->80/tcp   my-web
+yyyyyyyyyyyy   my-web    0.0.0.0:8081->80/tcp   my-web2
+$docker run -d -p 8082:80 --name my-web-live -v${PWD}:/usr/share/nginx/html nginx
+# 1) 볼륨 생성
+$ docker volume create mydata
+
+# 2) 컨테이너 연결 및 데이터 작성
+$ docker run --name vol-test -v mydata:/data ubuntu bash -c "echo 'hello volume' > /data/memo.txt"
+
+# 3) 컨테이너 삭제
+$ docker rm vol-test
+
+# 4) 새 컨테이너에서 동일 볼륨 연결 후 데이터 확인
+$ docker run --rm -v mydata:/data ubuntu cat /data/memo.txt
+hello volume
+$ git config --list
+user.name=chaewon8227
+user.email=chaewon9331@gmail.com
+init.defaultbranch=main
