@@ -1,2 +1,4 @@
-FROM nginx
-COPY index.html /usr/share/nginx/html/index.html
+FROM nginx:alpine
+LABEL org.opencontainers.image.title="chaewon-web"
+ENV APP_ENV=dev
+COPY site/ /usr/share/nginx/html/
