@@ -106,4 +106,3 @@ hello volume
 $ git config --list
 user.name=chaewon8227
 user.email=chaewon9331@gmail.com
-init.defaultbranch=main
